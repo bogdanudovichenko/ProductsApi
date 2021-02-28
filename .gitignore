@@ -37,6 +37,7 @@ msbuild.wrn
 .vs/
 
 #custom
+wwwroot/assets/uploaded
 wwwroot/images/uploaded
 products.json
 Products.json

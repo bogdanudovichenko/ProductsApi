@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using ProductsApi.Validators;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProductsApi.Models
@@ -13,6 +14,7 @@ namespace ProductsApi.Models
         public double Price { get; set; }
 
         [Required]
+        [FormImageValidator]
         public IFormFile PrimaryImage { get; set; }
     }
 }

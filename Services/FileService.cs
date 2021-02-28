@@ -9,14 +9,13 @@ namespace ProductsApi.Services
     {
         public async Task<string> UploadFileAsync(IFormFile file)
         {
-            using var binaryReader = new BinaryReader(file.OpenReadStream());
-            var bytes = binaryReader.ReadBytes((int)file.Length);
-
             var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-            var path = $"wwwroot/images/uploaded/{fileName}";
+            var path = $"wwwroot/assets/uploaded/{fileName}";
 
-            await File.WriteAllBytesAsync(path, bytes);
-            return $"images/uploaded/{fileName}";
+            using var stream = File.Create(path);
+            await file.CopyToAsync(stream);
+
+            return $"assets/uploaded/{fileName}";
         }
     }
 }
