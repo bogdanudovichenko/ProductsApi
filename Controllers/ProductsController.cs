@@ -56,13 +56,7 @@ namespace ProductsApi.Controllers
             }
 
             var primaryImageUrl = await _fileService.UploadFileAsync(productForm.PrimaryImage);
-
-            var product = new Product
-            {
-                Name = productForm.Name,
-                Price = productForm.Price,
-                PrimaryImageUrl = primaryImageUrl
-            };
+            var product = new Product(productForm.Name, productForm.Price, primaryImageUrl);
             
             var id = await _repository.CreateProductAsync(product);
             return StatusCode((int)HttpStatusCode.Created, id);
@@ -79,13 +73,7 @@ namespace ProductsApi.Controllers
             }
 
             var primaryImageUrl = await _fileService.UploadFileAsync(productForm.PrimaryImage);
-
-            var product = new Product
-            {
-                Name = productForm.Name,
-                Price = productForm.Price,
-                PrimaryImageUrl = primaryImageUrl
-            };
+            var product = new Product(productForm.Name, productForm.Price, primaryImageUrl);
 
             var error = await _repository.UpdateProductAsync(id, product);
             if (string.IsNullOrEmpty(error))

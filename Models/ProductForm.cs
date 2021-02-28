@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProductsApi.Models
 {
-    public class ProductForm
+    public record ProductForm
     {
         [Required]
         [MinLength(2)]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [Range(1, 999999)]
-        public double Price { get; set; }
+        public double Price { get; init; }
 
         [Required]
         [FormImageValidator]
-        public IFormFile PrimaryImage { get; set; }
+        public IFormFile PrimaryImage { get; init; }
     }
 }

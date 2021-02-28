@@ -25,28 +25,35 @@ namespace ProductsApi.Repositories
 
         public async Task<Guid> CreateProductAsync(Product product)
         {
-            product.Id = Guid.NewGuid();
+            var newProduct = product with
+            {
+                Id = Guid.NewGuid()
+            };
 
             var products = await ReadAllProductsAsync();
-            var result = products.Concat(new[] { product }).ToList();
+            var result = products.Concat(new[] { newProduct }).ToList();
             await WriteAllProductsAsync(result);
 
-            return product.Id;
+            return newProduct.Id;
         }
 
         public async Task<string> UpdateProductAsync(Guid id, Product product)
         {
             var products = await ReadAllProductsAsync();
 
-            var existingProduct = products.SingleOrDefault(product => product.Id == id);
-            if (existingProduct == null)
+            if (!products.Any(p => p.Id == id))
             {
                 return $"Product {id} ({product.Name}) not found.";
             }
 
-            existingProduct.Name = product.Name;
-            existingProduct.Price = product.Price;
-            existingProduct.PrimaryImageUrl = product.PrimaryImageUrl;
+            var newProduct = product with {
+                Id = id
+            };
+
+            var result = products
+                .Where(p => p.Id != id)
+                .Concat(new[] { newProduct })
+                .ToList();
 
             await WriteAllProductsAsync(products);
             return string.Empty;

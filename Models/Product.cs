@@ -2,11 +2,8 @@ using System;
 
 namespace ProductsApi.Models
 {
-    public class Product
+    public record Product(string Name, double Price, string PrimaryImageUrl)
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public string PrimaryImageUrl { get; set; }
+        public Guid Id { get; init; }
     }
 }
