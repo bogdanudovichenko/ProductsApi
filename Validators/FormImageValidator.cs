@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -11,10 +12,15 @@ namespace ProductsApi.Validators
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            if (value == null)
+            {
+                return ValidationResult.Success;
+            }
+
             var file = value as IFormFile;
             if (file == null)
             {
-                return ValidationResult.Success;
+                throw new Exception($"Unsupported value type: {value.GetType()}");
             }
 
             var extension = Path.GetExtension(file.FileName);
