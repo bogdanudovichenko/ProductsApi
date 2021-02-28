@@ -8,7 +8,7 @@ using ProductsApi.Models;
 
 namespace ProductsApi.Repositories
 {
-    public class ProductsRepository
+    public class FileProductsRepository : IProductsRepository
     {
         private const string FileName = "products.json";
 
@@ -28,7 +28,7 @@ namespace ProductsApi.Repositories
             product.Id = Guid.NewGuid();
 
             var products = await ReadAllProductsAsync();
-            var result = products.Concat(new [] { product }).ToList();
+            var result = products.Concat(new[] { product }).ToList();
             await WriteAllProductsAsync(result);
 
             return product.Id;
@@ -39,7 +39,7 @@ namespace ProductsApi.Repositories
             var products = await ReadAllProductsAsync();
 
             var existingProduct = products.SingleOrDefault(product => product.Id == id);
-            if(existingProduct == null)
+            if (existingProduct == null)
             {
                 return $"Product {id} ({product.Name}) not found.";
             }
@@ -61,13 +61,13 @@ namespace ProductsApi.Repositories
 
         private async Task<IEnumerable<Product>> ReadAllProductsAsync()
         {
-            if(!File.Exists(FileName))
+            if (!File.Exists(FileName))
             {
                 return new List<Product>();
             }
 
             var json = await File.ReadAllTextAsync(FileName);
-            if(string.IsNullOrEmpty(json))
+            if (string.IsNullOrEmpty(json))
             {
                 return new List<Product>();
             }
@@ -76,7 +76,7 @@ namespace ProductsApi.Repositories
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-        }       
+        }
 
         private async Task WriteAllProductsAsync(IEnumerable<Product> products)
         {
@@ -84,7 +84,7 @@ namespace ProductsApi.Repositories
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
-            
+
             await File.WriteAllTextAsync(FileName, json);
         }
     }

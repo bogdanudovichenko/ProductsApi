@@ -28,7 +28,7 @@ namespace ProductsApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductsApi", Version = "v1" });
             });
 
-            services.AddSingleton<ProductsRepository>();
+            services.AddSingleton<IProductsRepository, FileProductsRepository>();
             services.AddSingleton<FileService>();
         }
 
@@ -38,7 +38,6 @@ namespace ProductsApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
             }
 
             app.UseSwagger();
