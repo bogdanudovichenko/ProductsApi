@@ -10,7 +10,7 @@ namespace ProductsApi.Repositories
 {
     public class ProductsRepository
     {
-        private const string FileName = "Products.json";
+        private const string FileName = "products.json";
 
         public async Task<IEnumerable<Product>> GetProductsAsync()
         {
@@ -46,7 +46,7 @@ namespace ProductsApi.Repositories
 
             existingProduct.Name = product.Name;
             existingProduct.Price = product.Price;
-            existingProduct.PrimaryImage = product.PrimaryImage;
+            existingProduct.PrimaryImageUrl = product.PrimaryImageUrl;
 
             await WriteAllProductsAsync(products);
             return string.Empty;

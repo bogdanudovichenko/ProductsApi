@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProductsApi.Models
 {
-    public class ProductCreateModel
+    public class ProductForm
     {
         [Required]
         [MinLength(2)]
@@ -10,5 +11,8 @@ namespace ProductsApi.Models
 
         [Range(1, 999999)]
         public double Price { get; set; }
+
+        [Required]
+        public IFormFile PrimaryImage { get; set; }
     }
 }

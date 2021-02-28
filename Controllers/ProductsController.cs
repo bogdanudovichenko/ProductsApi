@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProductsApi.Models;
 using ProductsApi.Repositories;
+using ProductsApi.Services;
 
 namespace ProductsApi.Controllers
 {
@@ -13,10 +12,14 @@ namespace ProductsApi.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ProductsRepository _repository;
+        private readonly FileService _fileService;
 
-        public ProductsController(ProductsRepository repository)
+        public ProductsController(
+            ProductsRepository repository,
+            FileService fileService)
         {
             _repository = repository;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -40,19 +43,22 @@ namespace ProductsApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ProductCreateModel productCreateModel)
+        public async Task<IActionResult> Post([FromForm] ProductForm productForm)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var primaryImageUrl = await _fileService.UploadFileAsync(productForm.PrimaryImage);
+
             var product = new Product
             {
-                Name = productCreateModel.Name,
-                Price = productCreateModel.Price
+                Name = productForm.Name,
+                Price = productForm.Price,
+                PrimaryImageUrl = primaryImageUrl
             };
-
+            
             var id = await _repository.CreateProductAsync(product);
 
             return Ok(id);
@@ -60,17 +66,20 @@ namespace ProductsApi.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] ProductCreateModel productCreateModel)
+        public async Task<IActionResult> Put(Guid id, [FromForm] ProductForm productForm)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var primaryImageUrl = await _fileService.UploadFileAsync(productForm.PrimaryImage);
+
             var product = new Product
             {
-                Name = productCreateModel.Name,
-                Price = productCreateModel.Price
+                Name = productForm.Name,
+                Price = productForm.Price,
+                PrimaryImageUrl = primaryImageUrl
             };
 
             var error = await _repository.UpdateProductAsync(id, product);
